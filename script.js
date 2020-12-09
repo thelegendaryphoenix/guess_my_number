@@ -4,19 +4,34 @@
 let secretNumber = Math.trunc(Math.random() * 20) + 1;
 let score = 20;
 let highScore = 0;
-console.log(secretNumber);
 
-//Game Reset
+//Game Reset Function
 document.querySelector('.again').addEventListener('click', function () {
   score = 20;
   secretNumber = Math.trunc(Math.random() * 20) + 1;
-  document.querySelector('.number').textContent = '?';
-  document.querySelector('.message').textContent = 'Start guessing...';
-  document.querySelector('.score').textContent = score;
+  //console.log(secretNumber); for testing purposes only
+  numberValue('?');
+  displayMessage('Start guessing...');
+  scoreValue(score);
   document.querySelector('.guess').value = '';
   document.querySelector('body').style.backgroundColor = '#222';
   document.querySelector('.number').style.width = '15rem';
 });
+
+//Display Message Function
+const displayMessage = function (message) {
+  document.querySelector('.message').textContent = message;
+};
+
+//Score Function
+const scoreValue = function (score) {
+  document.querySelector('.score').textContent = score;
+};
+
+//Number Function
+const numberValue = function (value) {
+  document.querySelector('.number').textContent = value;
+};
 
 //Check Button submission
 document.querySelector('.check').addEventListener('click', function () {
@@ -25,12 +40,10 @@ document.querySelector('.check').addEventListener('click', function () {
 
   //Add validator for invalid numbers, guesses too high, and guesses too low
   if (!guess || guess <= 0 || guess > 20) {
-    document.querySelector('.message').textContent =
-      "Oops! You didn't enter a valid number. Try again!";
+    displayMessage("Oops! You didn't enter a valid number. Try again!");
   } else if (guess === secretNumber) {
-    document.querySelector('.message').textContent =
-      'Hooray! You guessed the secret number!';
-    document.querySelector('.number').textContent = secretNumber;
+    displayMessage('Hooray! You guessed the secret number!');
+    numberValue(secretNumber);
     //Change the background color on win
     document.querySelector('body').style.backgroundColor = '#60b347';
     //Change the width of the score block on win
@@ -40,27 +53,15 @@ document.querySelector('.check').addEventListener('click', function () {
       highScore = score;
       document.querySelector('.highscore').textContent = highScore;
     }
-  } else if (guess > secretNumber) {
+  } else if (guess !== secretNumber) {
     if (score > 1) {
-      document.querySelector('.message').textContent = 'Too High!';
+      displayMessage(guess > secretNumber ? 'Too High!' : 'Too Low!');
       //subtract 1 from score for every wrong guess
       score--;
-      document.querySelector('.score').textContent = score;
+      scoreValue(score);
     } else {
-      document.querySelector('.message').textContent =
-        'Too bad, you lost the game. Try again!';
-      document.querySelector('.score').textContent = score;
-    }
-  } else if (guess < secretNumber) {
-    if (score > 1) {
-      document.querySelector('.message').textContent = 'Too Low';
-      //subtract 1 from score for every wrong guess
-      score--;
-      document.querySelector('.score').textContent = score;
-    } else {
-      document.querySelector('.message').textContent = score;
-      ('Too bad, you lost the game. Try again!');
-      document.querySelector('.score').textContent = score;
+      displayMessage('Too bad, you lost the game. Try again!');
+      scoreValue(score);
     }
   }
 });
